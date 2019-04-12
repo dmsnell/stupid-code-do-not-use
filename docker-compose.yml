@@ -1,0 +1,40 @@
+version: '3.3'
+
+services:
+  db:
+    image: mysql:5.7
+    volumes:
+      - db_data:/var/lib/mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: wordpress
+      MYSQL_DATABASE: wordpress
+      MYSQL_USER: wordpress
+      MYSQL_PASSWORD: wordpress
+
+  wordpress:
+    depends_on:
+      - db
+    image: wordpress:latest
+    ports:
+      - "80:80"
+    volumes:
+      - $PWD/uploads.ini:/usr/local/etc/php/conf.d/uploads.ini
+      - $PWD/rest_fields:/var/www/html/wp-content/plugins/rest_fields
+      - $PWD/ahp:/var/www/html/wp-content/plugins/ahp
+      - $PWD/fse:/var/www/html/wp-content/plugins/fse
+      - $PWD/fse-theme:/var/www/html/wp-content/themes/fse-theme
+      - /Volumes/Optane/gutenberg:/var/www/html/wp-content/plugins/gutenberg
+    restart: always
+    environment:
+      WORDPRESS_DB_HOST: db:3306
+      WORDPRESS_DB_USER: wordpress
+      WORDPRESS_DB_PASSWORD: wordpress
+      WORDPRESS_DB_NAME: wordpress
+      WORDPRESS_CONFIG_EXTRA: |
+        define( 'SCRIPT_DEBUG', true );
+        define( 'WP_DEBUG', true );
+        define( 'FS_METHOD', 'direct' );
+      
+volumes:
+    db_data: {}
