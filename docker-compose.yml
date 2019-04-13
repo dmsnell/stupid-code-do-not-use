@@ -20,11 +20,10 @@ services:
       - "80:80"
     volumes:
       - $PWD/uploads.ini:/usr/local/etc/php/conf.d/uploads.ini
-      - $PWD/rest_fields:/var/www/html/wp-content/plugins/rest_fields
       - $PWD/ahp:/var/www/html/wp-content/plugins/ahp
       - $PWD/fse:/var/www/html/wp-content/plugins/fse
       - $PWD/fse-theme:/var/www/html/wp-content/themes/fse-theme
-      - /Volumes/Optane/gutenberg:/var/www/html/wp-content/plugins/gutenberg
+      - /Users/dmsnell/PhpstormProjects/gutenberg:/var/www/html/wp-content/plugins/gutenberg
     restart: always
     environment:
       WORDPRESS_DB_HOST: db:3306

@@ -1,10 +1,10 @@
-// const { registerBlockType } = wp.blocks;
-const { URLInput } = wp.editor;
-// const { createElement: el } = wp.element;
-
 (function () {
 	const { apiFetch } = wp;
-	const { RawHTML } = wp.element;
+	const { TextControl } = wp.components;
+	const { URLInput } = wp.editor;
+	const { Component, RawHTML } = wp.element;
+	const { PluginPostStatusInfo, PluginSidebar } = wp.editPost;
+	const { registerPlugin } = wp.plugins;
 
 	const attributes = {
 		postId: {
@@ -80,6 +80,44 @@ const { URLInput } = wp.editor;
 			attributes: attributes,
 			edit: Edit,
 			save: Save
+		}
+	);
+
+	class TemplateSelector extends Component {
+		componentDidMount() {
+			apiFetch( { path: `fse/post-template?post_id=10` } )
+				.then( ( { template_id } ) => this.setState( { template_id } ) );
+		}
+
+		render() {
+			return (
+				el(
+					PluginPostStatusInfo,
+					{},
+					el(
+						TextControl,
+						{
+							label: 'Layout Template',
+							value: this.state && this.state.template_id || 'Loading…',
+							onChange: value => (
+								this.setState( { template_id: value }, () => {
+									apiFetch( { 
+										path: `/fse/post-template?post_id=10&template_id=${ value }`,
+										method: 'POST',
+									} )
+										.then( ( { template_id } ) => this.setState( { template_id } ) );
+								} )
+							),
+						}
+					)
+				)
+			);
+		}
+	}
+	registerPlugin(
+		'fse-layout-template-selector',
+		{
+			render: TemplateSelector,
 		}
 	);
 })();
