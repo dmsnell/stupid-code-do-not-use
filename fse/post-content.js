@@ -1,6 +1,7 @@
 (function () {
 	const { apiFetch } = wp;
 	const { registerBlockType } = wp.blocks;
+	const { URLInput } = wp.editor;
 	const { RawHTML } = wp.element;
 
 	const fetchPreview = (setAttributes, { isFetching, postId }) => {
@@ -22,9 +23,16 @@
 					isFetching: false,
 					title: page.title && page.title.rendered
 				});
+			}).catch(() => {
+				apiFetch({ path: `/wp/v2/fse_layout/${postId}` }).then(page => {
+					setAttributes({ 
+						preview: page.content.rendered,
+						isFetching: false,
+						title: page.title && page.title.rendered
+					});
+				})
 			})
-		}
-		)
+		})
 	}
 
 	const Edit = ({ className, attributes, isSelected, setAttributes }) => (

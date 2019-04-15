@@ -35,6 +35,14 @@
 					isFetching: false,
 					title: page.title && page.title.rendered
 				});
+			}).catch(() => {
+				apiFetch({ path: `/wp/v2/fse_layout/${postId}` }).then(page => {
+					setAttributes({ 
+						preview: page.content.rendered,
+						isFetching: false,
+						title: page.title && page.title.rendered
+					});
+				})
 			})
 		}
 		)
@@ -83,41 +91,41 @@
 		}
 	);
 
-	class TemplateSelector extends Component {
-		componentDidMount() {
-			apiFetch( { path: `fse/post-template?post_id=10` } )
-				.then( ( { template_id } ) => this.setState( { template_id } ) );
-		}
+	// class TemplateSelector extends Component {
+	// 	componentDidMount() {
+	// 		apiFetch( { path: `fse/post-template?post_id=10` } )
+	// 			.then( ( { template_id } ) => this.setState( { template_id } ) );
+	// 	}
 
-		render() {
-			return (
-				el(
-					PluginPostStatusInfo,
-					{},
-					el(
-						TextControl,
-						{
-							label: 'Layout Template',
-							value: this.state && this.state.template_id || 'Loading…',
-							onChange: value => (
-								this.setState( { template_id: value }, () => {
-									apiFetch( { 
-										path: `/fse/post-template?post_id=10&template_id=${ value }`,
-										method: 'POST',
-									} )
-										.then( ( { template_id } ) => this.setState( { template_id } ) );
-								} )
-							),
-						}
-					)
-				)
-			);
-		}
-	}
-	registerPlugin(
-		'fse-layout-template-selector',
-		{
-			render: TemplateSelector,
-		}
-	);
+	// 	render() {
+	// 		return (
+	// 			el(
+	// 				PluginPostStatusInfo,
+	// 				{},
+	// 				el(
+	// 					TextControl,
+	// 					{
+	// 						label: 'Layout Template',
+	// 						value: this.state && this.state.template_id || 'Loading…',
+	// 						onChange: value => (
+	// 							this.setState( { template_id: value }, () => {
+	// 								apiFetch( { 
+	// 									path: `/fse/post-template?post_id=10&template_id=${ value }`,
+	// 									method: 'POST',
+	// 								} )
+	// 									.then( ( { template_id } ) => this.setState( { template_id } ) );
+	// 							} )
+	// 						),
+	// 					}
+	// 				)
+	// 			)
+	// 		);
+	// 	}
+	// }
+	// registerPlugin(
+	// 	'fse-layout-template-selector',
+	// 	{
+	// 		render: TemplateSelector,
+	// 	}
+	// );
 })();

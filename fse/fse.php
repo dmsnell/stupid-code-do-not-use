@@ -37,7 +37,8 @@ add_action( 'init', function() {
 
 				$post_id = (int) $attributes['postId'];
 
-				if ( 'fse_layout' === get_post_type( $post_id ) ) {
+				// if ( 'fse_layout' === get_post_type( $post_id ) ) {
+				if ( $post_id === get_the_ID() ) {
 					return "Can't render own template";
 				}
 
@@ -74,7 +75,8 @@ add_action( 'init', function() {
 			'render_callback' => function( $attributes, $content ) {
 				global $post_id;
 
-				if ( 'fse_layout' === get_post_type( $post_id ) ) {
+				// if ( 'fse_layout' === get_post_type( $post_id ) ) {
+				if ( $post_id === get_the_ID() ) {
 					return "Can't render own template";
 				}
 
